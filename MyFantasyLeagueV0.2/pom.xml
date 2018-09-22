@@ -6,7 +6,7 @@
 	<groupId>com.mfl</groupId>
 	<artifactId>mfl-api</artifactId>
 	<version>0.2</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>MyFantasyLeagueV0.2</name>
 	<description>My Fantasy League</description>
