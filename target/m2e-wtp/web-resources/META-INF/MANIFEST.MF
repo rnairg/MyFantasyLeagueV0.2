@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: raka
+Build-Jdk: 10.0.2
+Implementation-Title: MyFantasyLeagueV0.2
+Implementation-Version: 0.2
+Implementation-Vendor-Id: com.mfl
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/mfl-api
+Created-By: Maven Integration for Eclipse
+
