@@ -5,11 +5,12 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import com.mfl.models.Match.Matches;
 import com.mfl.modules.XMLServices;
-
+@Service
 public class MatchXMLServices implements XMLServices {
 	
 	Jaxb2Marshaller jaxb2MarshallerM;

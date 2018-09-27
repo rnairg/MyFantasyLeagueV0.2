@@ -5,14 +5,18 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.mfl.models.PlayerStat;
 import com.mfl.models.PlayerStat.PlayerStats;
 import com.mfl.modules.DBServices;
-
+@Repository
 public class PlayerStatDBServices implements DBServices {
-	
+	@Autowired
 	private PlayerStats playerStats;
 	private String action;
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	public PlayerStats getPlayerStats() {
@@ -31,17 +35,9 @@ public class PlayerStatDBServices implements DBServices {
 		this.action = action;
 	}
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
 	@Override
 	public Boolean objectToDB() {
-		Session s = getSessionFactory().openSession();
+		Session s = sessionFactory.openSession();
 		s.beginTransaction();
 		for(int i=0;i<playerStats.getPlayerStats().size();i++)
 		{
@@ -69,7 +65,7 @@ public class PlayerStatDBServices implements DBServices {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean dBToObject(int key) {
-		Session s = getSessionFactory().openSession();
+		Session s = sessionFactory.openSession();
 		s.beginTransaction();
 		playerStats.setPlayerStats((ArrayList<PlayerStat>) s.createQuery("from PlayerStat ps where  ps.id="+key).list());
 		s.close();
@@ -79,7 +75,7 @@ public class PlayerStatDBServices implements DBServices {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean dBToObject() {
-		Session s = getSessionFactory().openSession();
+		Session s = sessionFactory.openSession();
 		s.beginTransaction();
 		playerStats.setPlayerStats((ArrayList<PlayerStat>) s.createQuery("select  ps.id as id from PlayerStat ps").setResultTransformer(Transformers.aliasToBean(PlayerStat.class)).list());
 		s.close();

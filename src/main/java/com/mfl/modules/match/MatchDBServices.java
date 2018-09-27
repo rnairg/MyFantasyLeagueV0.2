@@ -5,15 +5,18 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.mfl.models.Match;
 import com.mfl.models.Match.Matches;
 import com.mfl.modules.DBServices;
-
+@Repository
 public class MatchDBServices implements DBServices {
-	
+	@Autowired
 	private Matches matches;
 	private String action;
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	public Matches getMatches() {
@@ -32,17 +35,9 @@ public class MatchDBServices implements DBServices {
 		this.action = action;
 	}
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
 	@Override
 	public Boolean objectToDB() {
-		Session s = getSessionFactory().openSession();
+		Session s = sessionFactory.openSession();
 		s.beginTransaction();
 		System.out.println("Check point 1");
 		for(Match match:matches.getMatches())
@@ -70,7 +65,7 @@ public class MatchDBServices implements DBServices {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean dBToObject(int key) {
-		Session s = getSessionFactory().openSession();
+		Session s = sessionFactory.openSession();
 		s.beginTransaction();
 		matches.setMatches((ArrayList<Match>) s.createQuery("from Match m where m.id="+key).list());
 		s.close();
@@ -80,7 +75,7 @@ public class MatchDBServices implements DBServices {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean dBToObject() {
-		Session s = getSessionFactory().openSession();
+		Session s = sessionFactory.openSession();
 		s.beginTransaction();	
 		matches.setMatches((ArrayList<Match>)s.createQuery("select m.id as id from Match m").setResultTransformer(Transformers.aliasToBean(Match.class)).list());;
 		s.close();

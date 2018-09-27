@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.stereotype.Component;
+
 @Entity
 @Table (name="PLAYER_STATS")
 public class PlayerStat {
@@ -69,7 +71,8 @@ public class PlayerStat {
 		this.runs = runs;
 	}
 	
-	@XmlRootElement(name = "playerStats") //Model Class for PlayerStats XML
+	@XmlRootElement(name = "playerStats")//Model Class for PlayerStats XML
+	@Component
 	public static class PlayerStats{
 		
 		private ArrayList<PlayerStat> playerStats = new ArrayList<PlayerStat>();

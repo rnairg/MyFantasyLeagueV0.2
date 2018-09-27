@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.stereotype.Component;
+
 @Entity
 @Table(name = "MATCH_MASTER")
 public class Match {
@@ -91,6 +93,7 @@ public class Match {
 		this.playerStats = playerStats;
 	}*/
 	@XmlRootElement(name = "matches")
+	@Component
 	public static class Matches{
 		
 		private ArrayList<Match> matches= new ArrayList<>();

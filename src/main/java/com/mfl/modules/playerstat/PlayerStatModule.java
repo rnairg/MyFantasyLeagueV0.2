@@ -1,30 +1,17 @@
 package com.mfl.modules.playerstat;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import com.mfl.models.PlayerStat.PlayerStats;
 import com.mfl.modules.Modules;
-
+@Service
 public class PlayerStatModule implements Modules {
-	
+	@Autowired
 	private PlayerStatXMLServices psxs;
+	@Autowired
 	private PlayerStatDBServices psds;
-	
-	public PlayerStatXMLServices getPsxs() {
-		return psxs;
-	}
-
-	public void setPsxs(PlayerStatXMLServices psxs) {
-		this.psxs = psxs;
-	}
-
-	public PlayerStatDBServices getPsds() {
-		return psds;
-	}
-
-	public void setPsds(PlayerStatDBServices psds) {
-		this.psds = psds;
-	}
 
 	@Override
 	public Boolean create() {
@@ -34,49 +21,49 @@ public class PlayerStatModule implements Modules {
 
 	@Override
 	public Boolean create(Document xmlResource) {
-		PlayerStats playerStat = getPsxs().xMLToObject(xmlResource);
-		getPsds().setPlayerStats(playerStat);
-		getPsds().setAction("create");
-		getPsds().objectToDB();
+		PlayerStats playerStat = psxs.xMLToObject(xmlResource);
+		psds.setPlayerStats(playerStat);
+		psds.setAction("create");
+		psds.objectToDB();
 		//teams.displayTeams();
 		return null;
 	}
 
 	@Override
 	public Boolean update(Document xmlResource) {
-		PlayerStats playerStat = getPsxs().xMLToObject(xmlResource);
+		PlayerStats playerStat = psxs.xMLToObject(xmlResource);
 		//players.displayPlayers();
-		getPsds().setPlayerStats(playerStat);
-		getPsds().setAction("update");
-		getPsds().objectToDB();
+		psds.setPlayerStats(playerStat);
+		psds.setAction("update");
+		psds.objectToDB();
 		return null;
 	}
 
 	@Override
 	public PlayerStats read() {
-		getPsds().dBToObject();
+		psds.dBToObject();
 		//getTds().getTeams().displayTeams();
-		getPsxs().objectToXML(getPsds().getPlayerStats());
+		psxs.objectToXML(psds.getPlayerStats());
 		return null;
 
 	}
 
 	@Override
 	public Boolean delete(Document xmlResource) {
-		PlayerStats playerStat = getPsxs().xMLToObject(xmlResource);
+		PlayerStats playerStat = psxs.xMLToObject(xmlResource);
 		//players.displayPlayers();
-		getPsds().setPlayerStats(playerStat);
-		getPsds().setAction("delete");
-		getPsds().objectToDB();
+		psds.setPlayerStats(playerStat);
+		psds.setAction("delete");
+		psds.objectToDB();
 
 		return null;
 	}
 
 	@Override
 	public PlayerStats read(int i) {
-		getPsds().dBToObject(i);
+		psds.dBToObject(i);
 		//getTds().getTeams().displayTeams();
-		getPsxs().objectToXML(getPsds().getPlayerStats());
+		psxs.objectToXML(psds.getPlayerStats());
 		return null;
 
 	}
