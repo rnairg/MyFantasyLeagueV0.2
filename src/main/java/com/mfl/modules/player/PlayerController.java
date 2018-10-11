@@ -1,6 +1,8 @@
 package com.mfl.modules.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JacksonJsonParser;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfl.models.Player.Players;
 import com.mfl.modules.Modules;
 
-
+@CrossOrigin
 @RestController
 public class PlayerController {
 	
