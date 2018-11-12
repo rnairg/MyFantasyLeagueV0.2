@@ -39,30 +39,33 @@ public class TeamDBServices implements DBServices {
 	}
 
 	@Override
-	public Boolean objectToDB() {
+	public ArrayList<Integer> objectToDB() {
 		Session s = sessionFactory.openSession();
 		s.beginTransaction();
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(int i=0;i<teams.getTeams().size();i++)
 		{
 			System.out.println("Action is:"+getAction());
 			if(getAction().equals("create"))
 			{
-			s.save(teams.getTeams().get(i));
+			result.add((int)s.save(teams.getTeams().get(i)));
 			}
 			else if(getAction().equals("update"))
 			{
 				System.out.println("Here");
 			s.update(teams.getTeams().get(i));
+			result.add(teams.getTeams().get(i).getId());
 			}
 			else if(getAction().equals("delete"))
 			{
 			s.delete(teams.getTeams().get(i));
+			result.add(teams.getTeams().get(i).getId());
 			}
 			
 		}
 		s.getTransaction().commit();
 		s.close();
-		return null;
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")

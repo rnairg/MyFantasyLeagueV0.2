@@ -27,9 +27,18 @@ public class Player { //Model for Table PLAYER_MASTER
 	@Column (name = "PLAYER_CATEGORY")
 	private String category;
 	
+	@Column (name = "PLAYER_NATIONALITY")
+	private String nationality;
+	
 	/*@JoinColumn (name = "PLAYER_IPL_TEAM_ID")
 	private IplTeam iplTeam;*/
 	
+	public String getNationality() {
+		return nationality;
+	}
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
+	}
 	/*@ManyToMany (mappedBy ="players")
 	//@ManyToOne (mappedBy ="players")
 	private Collection<Team> teams = new ArrayList<Team>();
@@ -78,11 +87,12 @@ public class Player { //Model for Table PLAYER_MASTER
 		this.iplTeam = iplTeam;
 	}*/
 	
-	public Player(int id, String name,String category)
+	public Player(int id, String name,String category, String nationality)
 	{
 		setId(id);
 		setName(name);
 		setCategory(category);
+		setNationality(nationality);
 	}
 	public Player() {
 		

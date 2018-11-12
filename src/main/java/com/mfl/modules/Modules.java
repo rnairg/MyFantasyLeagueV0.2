@@ -1,25 +1,25 @@
 package com.mfl.modules;
 
-import org.w3c.dom.Document;
+import java.util.ArrayList;
 
 public interface Modules {
 
-	public Boolean create();
+	//public Boolean create();
 	
-	public Boolean create(Document xmlresource);
+	//public Boolean create(Document xmlresource);
 	
-	public Boolean update(Document xmlResource);
+	//public Boolean update(Document xmlResource);
 	
 	public Object read();
 	
-	public Boolean delete(Document xmlResource);
+	//public Boolean delete(Document xmlResource);
 
 	public Object read(int i);
 
-	Boolean create(Object o);
+	ArrayList<Integer> create(Object o);
 
-	Boolean delete(Object o);
+	ArrayList<Integer> delete(Object o);
 
-	Boolean update(Object o);
+	ArrayList<Integer> update(Object o);
 	
 }

@@ -1,5 +1,7 @@
 package com.mfl.modules.match;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,44 +21,37 @@ public class MatchController {
 	@RequestMapping("/matches")
 	public Matches getMatches()
 	{
-		
 		return (Matches) matchModule.read();
-		
 	}
 	
 	@RequestMapping("/matches/match/{id}")
 	public Matches getMatches(@PathVariable("id") int id)
 	{
-		
 		return (Matches) matchModule.read(id);
-		
 	}
 	
 	@RequestMapping(value="/matches/add",method=RequestMethod.POST)
-	public void addMatches(@RequestBody Object o)
+	public ArrayList<Integer> addMatches(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Matches m = mapper.convertValue(o,Matches.class);
-		matchModule.create(m);
-		
+		return matchModule.create(m);
 	}
 	
 	@RequestMapping(value="/matches/delete",method=RequestMethod.DELETE)
-	public void deleteMatches(@RequestBody Object o)
+	public ArrayList<Integer> deleteMatches(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Matches m = mapper.convertValue(o,Matches.class);
-		matchModule.delete(m);
-		
+		return matchModule.delete(m);
 	}
 	
 	@RequestMapping(value="/matches/update",method=RequestMethod.PUT)
-	public void updateMatches(@RequestBody Object o)
+	public ArrayList<Integer> updateMatches(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Matches m = mapper.convertValue(o,Matches.class);
-		matchModule.update(m);
-		
+		return matchModule.update(m);
 	}
 
 }

@@ -37,24 +37,26 @@ public class PlayerDBServices implements DBServices {
 	}
 
 	@Override
-	public Boolean objectToDB() {
+	public ArrayList<Integer> objectToDB() {
 		Session s = sessionFactory.openSession();
 		s.beginTransaction();
-		System.out.println("Check point 1");
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(Player player:players.getPlayers())
 		{
 			System.out.println("Action is:"+getAction());
 			if(getAction().equals("create"))
 			{
-			s.save(player);
+			result.add((int)s.save(player));
 			}
 			else if(getAction().equals("update"))
 			{
 			s.update(player);
+			result.add(player.getId());
 			}
 			else if(getAction().equals("delete"))
 			{
 			s.delete(player);
+			result.add(player.getId());
 			}
 		}
 		s.getTransaction().commit();
@@ -62,9 +64,8 @@ public class PlayerDBServices implements DBServices {
 		//System.out.println("In object to db");
 		//getPlayers().displayPlayers();
 		// TODO Auto-generated method stub
-		return null;
+		return result;
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -22,11 +22,9 @@ public class PlayerStatDBServices implements DBServices {
 	public PlayerStats getPlayerStats() {
 		return playerStats;
 	}
-
 	public void setPlayerStats(PlayerStats playerStats) {
 		this.playerStats = playerStats;
 	}
-
 	public String getAction() {
 		return action;
 	}
@@ -36,30 +34,31 @@ public class PlayerStatDBServices implements DBServices {
 	}
 
 	@Override
-	public Boolean objectToDB() {
+	public ArrayList<Integer> objectToDB() {
 		Session s = sessionFactory.openSession();
 		s.beginTransaction();
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(int i=0;i<playerStats.getPlayerStats().size();i++)
 		{
 			System.out.println("Action is:"+getAction());
 			if(getAction().equals("create"))
 			{
-			s.save(playerStats.getPlayerStats().get(i));
+				result.add((int)s.save(playerStats.getPlayerStats().get(i)));
 			}
 			else if(getAction().equals("update"))
 			{
-				System.out.println("Here");
-			s.update(playerStats.getPlayerStats().get(i));
+				s.update(playerStats.getPlayerStats().get(i));
+				result.add(playerStats.getPlayerStats().get(i).getId());
 			}
 			else if(getAction().equals("delete"))
 			{
-			s.delete(playerStats.getPlayerStats().get(i));
+				s.delete(playerStats.getPlayerStats().get(i));
+				result.add(playerStats.getPlayerStats().get(i).getId());
 			}
-			
 		}
 		s.getTransaction().commit();
 		s.close();
-		return null;
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -72,7 +71,7 @@ public class PlayerStatDBServices implements DBServices {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public Boolean dBToObject() {
 		Session s = sessionFactory.openSession();
@@ -81,5 +80,4 @@ public class PlayerStatDBServices implements DBServices {
 		s.close();
 		return null;
 	}
-
 }

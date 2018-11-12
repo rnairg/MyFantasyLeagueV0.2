@@ -1,5 +1,7 @@
 package com.mfl.modules.iplteam;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,29 +36,29 @@ public class IplTeamController {
 	}
 	
 	@RequestMapping(value="/iplTeams/add",method=RequestMethod.POST)
-	public void addIplTeams(@RequestBody Object o)
+	public ArrayList<Integer> addIplTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		IplTeams it = mapper.convertValue(o,IplTeams.class);
-		iplTeamModule.create(it);
+		return iplTeamModule.create(it);
 		
 	}
 	
 	@RequestMapping(value="/iplTeams/delete",method=RequestMethod.DELETE)
-	public void deleteIplTeams(@RequestBody Object o)
+	public ArrayList<Integer> deleteIplTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		IplTeams it = mapper.convertValue(o,IplTeams.class);
-		iplTeamModule.delete(it);
+		return iplTeamModule.delete(it);
 		
 	}
 	
 	@RequestMapping(value="/iplTeams/update",method=RequestMethod.PUT)
-	public void updateIplTeams(@RequestBody Object o)
+	public ArrayList<Integer> updateIplTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		IplTeams it = mapper.convertValue(o,IplTeams.class);
-		iplTeamModule.update(it);
+		return iplTeamModule.update(it);
 		
 	}
 

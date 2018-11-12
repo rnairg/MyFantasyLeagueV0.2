@@ -1,16 +1,14 @@
 package com.mfl.modules.team;
 
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 import com.mfl.models.Team.Teams;
 import com.mfl.modules.Modules;
 
 @Service("teamModule")
 public class TeamModule implements Modules {
 	
-	@Autowired
-	private TeamXMLServices txs;
 	@Autowired
 	private TeamDBServices tds;
 
@@ -31,28 +29,6 @@ public class TeamModule implements Modules {
 	}*/
 
 	@Override
-	public Boolean create() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Boolean create(Document xmlResource) {
-		Teams teams = txs.xMLToObject(xmlResource);
-		tds.setTeams(teams);
-		tds.setAction("create");
-		tds.objectToDB();
-		//teams.displayTeams();
-		return null;
-	}
-	@Override
-	public Boolean create(Object o) {
-		tds.setTeams((Teams)o);
-		tds.setAction("create");
-		tds.objectToDB();
-		return null;
-	}
-
-	@Override
 	public Teams read() {
 		System.out.println("In Teams read");
 		tds.dBToObject();
@@ -67,38 +43,22 @@ public class TeamModule implements Modules {
 		//getTxs().objectToXML(getTds().getTeams());
 		return tds.getTeams();		
 	}
-
 	@Override
-	public Boolean delete(Document xmlResource) {
-		Teams teams = txs.xMLToObject(xmlResource);
-		//players.displayPlayers();
-		tds.setTeams(teams);
-		tds.setAction("delete");
-		tds.objectToDB();
-		return null;
-	}
-	@Override
-	public Boolean delete(Object o) {
+	public ArrayList<Integer> create(Object o) {
 		tds.setTeams((Teams)o);
-		tds.setAction("delete");
-		tds.objectToDB();
-		return null;
-	}
-
-	@Override
-	public Boolean update(Document xmlResource) {
-		Teams teams = txs.xMLToObject(xmlResource);
-		//players.displayPlayers();
-		tds.setTeams(teams);
-		tds.setAction("update");
-		tds.objectToDB();
-		return null;
+		tds.setAction("create");
+		return tds.objectToDB();
 	}
 	@Override
-	public Boolean update(Object o) {
+	public ArrayList<Integer> update(Object o) {
 		tds.setTeams((Teams)o);
 		tds.setAction("update");
-		tds.objectToDB();
-		return null;
+		return tds.objectToDB();
+	}
+	@Override
+	public ArrayList<Integer> delete(Object o) {
+		tds.setTeams((Teams)o);
+		tds.setAction("delete");
+		return tds.objectToDB();
 	}
 }

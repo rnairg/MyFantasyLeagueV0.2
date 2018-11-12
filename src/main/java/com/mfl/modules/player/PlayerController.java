@@ -1,5 +1,7 @@
 package com.mfl.modules.player;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,11 +38,11 @@ public class PlayerController {
 	}
 	
 	@RequestMapping(value="/players/add",method=RequestMethod.POST)
-	public void addPlayers(@RequestBody Object o)
+	public ArrayList<Integer> addPlayers(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Players p = mapper.convertValue(o,Players.class);
-		playerModule.create(p);
+		return playerModule.create(p);
 		
 	}
 	

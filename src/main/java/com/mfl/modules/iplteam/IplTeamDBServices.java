@@ -18,11 +18,9 @@ public class IplTeamDBServices implements DBServices {
 	public IplTeams getIplTeams() {
 		return iplTeams;
 	}
-
 	public void setIplTeams(IplTeams iplteams) {
 		this.iplTeams = iplteams;
 	}
-
 	private String action;
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -30,7 +28,6 @@ public class IplTeamDBServices implements DBServices {
 	public String getAction() {
 		return action;
 	}
-
 	public void setAction(String action) {
 		this.action = action;
 	}
@@ -38,32 +35,33 @@ public class IplTeamDBServices implements DBServices {
 	//SessionFactory sf = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
 
 	@Override
-	public Boolean objectToDB() {
+	public ArrayList<Integer> objectToDB() {
 		Session s = sessionFactory.openSession();
 		s.beginTransaction();
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(int i=0;i<iplTeams.getIplTeams().size();i++)
 		{
 			System.out.println("Action is:"+getAction());
 			if(getAction().equals("create"))
 			{
-			s.save(iplTeams.getIplTeams().get(i));
+				result.add((int)s.save(iplTeams.getIplTeams().get(i)));
 			}
 			else if(getAction().equals("update"))
 			{
 				System.out.println("Here");
-			s.update(iplTeams.getIplTeams().get(i));
+				s.update(iplTeams.getIplTeams().get(i));
+				result.add(iplTeams.getIplTeams().get(i).getId());
 			}
 			else if(getAction().equals("delete"))
 			{
-			s.delete(iplTeams.getIplTeams().get(i));
-			}
-			
+				s.delete(iplTeams.getIplTeams().get(i));
+				result.add(iplTeams.getIplTeams().get(i).getId());
+			}	
 		}
 		s.getTransaction().commit();
 		s.close();
-		return null;
+		return result;
 	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean dBToObject(int key) {
@@ -73,7 +71,6 @@ public class IplTeamDBServices implements DBServices {
 		s.close();
 		return null;
 	}
-
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public Boolean dBToObject() {
