@@ -3,13 +3,21 @@ package com.mfl.models;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -22,7 +30,17 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Table (name="TEAM_MASTER")
-public class Team { //Model for Table TEAM_MASTER
+@NamedNativeQueries(
+{@NamedNativeQuery(name="get_all_teams", query="select team_id as id, team_name as name from TEAM_MASTER",resultSetMapping="teamMapping"),
+@NamedNativeQuery(name="get_team_byID", query="select * from TEAM_MASTER where team_id=:id",resultSetMapping="teamMapping_all_fields")})
+@SqlResultSetMappings(
+{@SqlResultSetMapping(name="teamMapping",classes= {@ConstructorResult(targetClass = Team.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
+@SqlResultSetMapping(name="teamMapping_all_fields",entities= {@EntityResult(entityClass=Team.class,
+fields= {@FieldResult(name="id", column="team_id"),
+		@FieldResult(name="owner", column="team_owner"),
+		@FieldResult(name="version", column="version")})})})
+
+public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 
 	@Id @GeneratedValue
 	@Column (name="TEAM_ID")
@@ -66,6 +84,10 @@ public class Team { //Model for Table TEAM_MASTER
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
+	public Team(int id, String name) {
+		this.id=id;
+		this.name=name;
+	}
 	
 	@XmlRootElement(name = "teams") //Model Class for Teams XML
 	@Component
@@ -80,29 +102,6 @@ public class Team { //Model for Table TEAM_MASTER
 		@XmlElement(name = "team")
 		public void setTeams(ArrayList<Team> teams) {
 			this.teams = teams;
-		}
-		
-		public void displayTeams()
-		{
-			System.out.println("Teams:"+getTeams().size());
-			for(int i=0;i<getTeams().size();i++)
-			{
-				System.out.println("------\nID = "+getTeams().get(i).getId()+
-						"\nName = "+getTeams().get(i).getName()+
-						"\nOwner = "+getTeams().get(i).getOwner());
-						/*"\nTeam Composition ="+getTeams().get(i).getTeamComp().size());
-				for(int j=0;j<getTeams().get(i).getTeamComp().size();j++)
-				{
-					//System.out.println("Comp ID:"+((ArrayList<TeamComp>) getTeams().get(i).getTeamComp()).get(j).getId());
-					//System.out.println("Team ID:"+((ArrayList<TeamComp>) getTeams().get(i).getTeamComp()).get(j).getTeamId());
-					//System.out.println("Player ID:"+((ArrayList<TeamComp>) getTeams().get(i).getTeamComp()).get(j).getPlayerId());
-					System.out.println("Data Load Complete... Display Object are WIP");
-				}*/
-			}
-						
-		}
-		
-		
+		}	
 	}
-	
 }

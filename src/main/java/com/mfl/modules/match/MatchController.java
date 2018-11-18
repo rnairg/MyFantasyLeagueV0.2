@@ -16,7 +16,7 @@ import com.mfl.modules.Modules;
 public class MatchController {
 	
 	@Autowired
-	private Modules matchModule;
+	private Modules<Matches> matchModule;
 
 	@RequestMapping("/matches")
 	public Matches getMatches()
@@ -39,19 +39,19 @@ public class MatchController {
 	}
 	
 	@RequestMapping(value="/matches/delete",method=RequestMethod.DELETE)
-	public ArrayList<Integer> deleteMatches(@RequestBody Object o)
+	public void deleteMatches(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Matches m = mapper.convertValue(o,Matches.class);
-		return matchModule.delete(m);
+		matchModule.delete(m);
 	}
 	
 	@RequestMapping(value="/matches/update",method=RequestMethod.PUT)
-	public ArrayList<Integer> updateMatches(@RequestBody Object o)
+	public void updateMatches(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Matches m = mapper.convertValue(o,Matches.class);
-		return matchModule.update(m);
+		matchModule.update(m);
 	}
 
 }

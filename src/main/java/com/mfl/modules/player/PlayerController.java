@@ -19,7 +19,7 @@ import com.mfl.modules.Modules;
 public class PlayerController {
 	
 	@Autowired
-	private Modules playerModule;
+	private Modules<Players> playerModule;
 
 	@RequestMapping("/players")
 	public Players getAllPlayers()
@@ -43,7 +43,6 @@ public class PlayerController {
 		ObjectMapper mapper = new ObjectMapper();
 		Players p = mapper.convertValue(o,Players.class);
 		return playerModule.create(p);
-		
 	}
 	
 	@RequestMapping(value="/players/delete",method=RequestMethod.DELETE)
@@ -52,7 +51,6 @@ public class PlayerController {
 		ObjectMapper mapper = new ObjectMapper();
 		Players p = mapper.convertValue(o,Players.class);
 		playerModule.delete(p);
-		
 	}
 	
 	@RequestMapping(value="/players/update",method=RequestMethod.PUT)
@@ -61,7 +59,6 @@ public class PlayerController {
 		ObjectMapper mapper = new ObjectMapper();
 		Players p = mapper.convertValue(o,Players.class);
 		playerModule.update(p);
-		
 	}
 
 }

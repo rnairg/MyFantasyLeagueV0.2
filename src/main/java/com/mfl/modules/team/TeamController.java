@@ -1,7 +1,5 @@
 package com.mfl.modules.team;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +15,7 @@ import com.mfl.modules.Modules;
 public class TeamController {
 	
 	@Autowired
-	private Modules teamModule;
+	private Modules<Teams> teamModule;
 
 	@RequestMapping("/teams")
 	public Teams getAllTeams()
@@ -36,27 +34,27 @@ public class TeamController {
 	}
 	
 	@RequestMapping(value="/teams/add",method=RequestMethod.POST)
-	public ArrayList<Integer> addTeams(@RequestBody Object o)
+	public void addTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Teams t = mapper.convertValue(o,Teams.class);
-		return teamModule.create(t);
+		teamModule.create(t);
 	}
 	
 	@RequestMapping(value="/teams/delete",method=RequestMethod.DELETE)
-	public ArrayList<Integer> deleteTeams(@RequestBody Object o)
+	public void deleteTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Teams t = mapper.convertValue(o,Teams.class);
-		return teamModule.delete(t);
+		teamModule.delete(t);
 	}
 	
 	@RequestMapping(value="/teams/update",method=RequestMethod.PUT)
-	public ArrayList<Integer> updateTeams(@RequestBody Object o)
+	public void updateTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		Teams t = mapper.convertValue(o,Teams.class);
-		return teamModule.update(t);
+		teamModule.update(t);
 	}
 
 }

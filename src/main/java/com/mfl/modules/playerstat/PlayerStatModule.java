@@ -4,44 +4,42 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.mfl.dao.CommonDBServicesImp;
+import com.mfl.models.PlayerStat;
 import com.mfl.models.PlayerStat.PlayerStats;
 import com.mfl.modules.Modules;
 @Service
-public class PlayerStatModule implements Modules {
+public class PlayerStatModule implements Modules<PlayerStats> {
 	
 	@Autowired
-	private PlayerStatDBServices psds;
+	private CommonDBServicesImp<PlayerStat> psds;
+	
+	@Autowired
+	private PlayerStats playerStats;
 
 	@Override
 	public PlayerStats read() {
-		psds.dBToObject();
-		//getTds().getTeams().displayTeams();
-		//psxs.objectToXML(psds.getPlayerStats());
-		return psds.getPlayerStats();
+		playerStats.setPlayerStats(psds.dBToObject("get_all_playerStats"));
+		return playerStats;
 	}
 	@Override
 	public PlayerStats read(int i) {
-		psds.dBToObject(i);
-		//getTds().getTeams().displayTeams();
-		//psxs.objectToXML(psds.getPlayerStats());
-		return psds.getPlayerStats();
+		playerStats.setPlayerStats(psds.dBToObject(i,"get_playerStats_byId"));
+		return playerStats;
 	}
 	@Override
-	public ArrayList<Integer> create(Object o) {
-		psds.setPlayerStats((PlayerStats)o);
-		psds.setAction("create");
-		return psds.objectToDB();
+	public ArrayList<Integer> create(PlayerStats playerStats) {
+		this.playerStats=playerStats;
+		return psds.objectToDB(this.playerStats.getPlayerStats());
 	}
 	@Override
-	public ArrayList<Integer> delete(Object o) {
-		psds.setPlayerStats((PlayerStats)o);
-		psds.setAction("delete");
-		return psds.objectToDB();
+	public void delete(PlayerStats playerStats) {
+		this.playerStats=playerStats;
+		psds.objectToDB(this.playerStats.getPlayerStats(),"delete");
 	}
 	@Override
-	public ArrayList<Integer> update(Object o) {
-		psds.setPlayerStats((PlayerStats)o);
-		psds.setAction("update");
-		return psds.objectToDB();
+	public void update(PlayerStats playerStats) {
+		this.playerStats=playerStats;
+		psds.objectToDB(this.playerStats.getPlayerStats(),"update");
 	}
 }

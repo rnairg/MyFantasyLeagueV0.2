@@ -4,43 +4,43 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.mfl.dao.CommonDBServicesImp;
+import com.mfl.models.IplTeam;
 import com.mfl.models.IplTeam.IplTeams;
 import com.mfl.modules.Modules;
 @Service
-public class IplTeamModule implements Modules {
+public class IplTeamModule implements Modules<IplTeams> {
 	
 	@Autowired
-	private IplTeamDBServices itds;
+	private CommonDBServicesImp<IplTeam> itds;
+	
+	@Autowired
+	private IplTeams iplTeams;
 
 	@Override
-	public ArrayList<Integer> create(Object o) {
-		itds.setIplTeams((IplTeams)o);
-		itds.setAction("create");
-		return itds.objectToDB();
+	public ArrayList<Integer> create(IplTeams iplTeams) {
+		this.iplTeams=iplTeams;
+		return itds.objectToDB(this.iplTeams.getIplTeams());
 	}
 	@Override
 	public IplTeams read() {
-		itds.dBToObject();
-		//itxs.objectToXML(itds.getIplTeams());
-		return itds.getIplTeams();
+		iplTeams.setIplTeams(itds.dBToObject("get_all_iplTeams"));
+		return iplTeams;
 	}
 	@Override
 	public IplTeams read(int i) {
-		itds.dBToObject(i);
-		//getTds().getTeams().displayTeams();
-		//itxs.objectToXML(itds.getIplTeams());
-		return itds.getIplTeams();
+		iplTeams.setIplTeams(itds.dBToObject(i,"get_iplTeam_byID"));;
+		return iplTeams;
 	}
 	@Override
-	public ArrayList<Integer> update(Object o) {
-		itds.setIplTeams((IplTeams)o);
-		itds.setAction("update");
-		return itds.objectToDB();
+	public void update(IplTeams iplTeams) {
+		this.iplTeams=iplTeams;
+		itds.objectToDB(this.iplTeams.getIplTeams(),"update");
 	}
 	@Override
-	public ArrayList<Integer> delete(Object o) {
-		itds.setIplTeams((IplTeams)o);
-		itds.setAction("delete");
-		return itds.objectToDB();
+	public void delete(IplTeams iplTeams) {
+		this.iplTeams=iplTeams;
+		itds.objectToDB(this.iplTeams.getIplTeams(),"update");
 	}
 }

@@ -1,15 +1,15 @@
 package com.mfl;
 
+import java.util.ArrayList;
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+
 
 @Configuration
 public class ApplicationConfig {
@@ -40,6 +40,10 @@ public class ApplicationConfig {
 			    env.getProperty("spring.jpa.hibernate.ddl-auto"));
 			    setProperty("hibernate.dialect",
 			    env.getProperty("spring.jpa.properties.hibernate.dialect"));
+			    setProperty("hibernate.show_sql",
+					    env.getProperty("spring.jpa.show-sql"));
+			    setProperty("hibernate.current_session_context_class",
+					    env.getProperty("current-session"));
 			}
 			
 		};
@@ -53,5 +57,9 @@ public class ApplicationConfig {
 		dataSource.setUsername(env.getProperty("spring.datasource.username"));
 		dataSource.setPassword(env.getProperty("spring.datasource.password"));
 		return dataSource;
+	}
+	@Bean
+	public <T> ArrayList<T> getTList(){
+		return new ArrayList<T>();
 	}
 }

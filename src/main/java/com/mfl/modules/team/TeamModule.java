@@ -4,61 +4,42 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mfl.models.Team.Teams;
+import com.mfl.dao.CommonDBServicesImp;
+import com.mfl.models.Team;
 import com.mfl.modules.Modules;
 
 @Service("teamModule")
-public class TeamModule implements Modules {
+public class TeamModule implements Modules<Teams> {
 	
 	@Autowired
-	private TeamDBServices tds;
-
-	/*public TeamDBServices getTds() {
-		return tds;
-	}
-
-	public void setTds(TeamDBServices tds) {
-		this.tds = tds;
-	}
-
-	public TeamXMLServices getTxs() {
-		return txs;
-	}
-
-	public void setTxs(TeamXMLServices txs) {
-		this.txs = txs;
-	}*/
+	private CommonDBServicesImp<Team> tds;
+	
+	@Autowired
+	Teams teams;
 
 	@Override
 	public Teams read() {
-		System.out.println("In Teams read");
-		tds.dBToObject();
-		//getTds().getTeams().displayTeams();
-		//getTxs().objectToXML(getTds().getTeams());
-		return tds.getTeams();
+		teams.setTeams(tds.dBToObject("get_all_teams"));
+		return teams;
 	}
 	@Override
 	public Teams read(int i) {
-		tds.dBToObject(i);
-		//getTds().getTeams().displayTeams();
-		//getTxs().objectToXML(getTds().getTeams());
-		return tds.getTeams();		
+		teams.setTeams(tds.dBToObject(i,"get_team_byId"));
+		return teams;		
 	}
 	@Override
-	public ArrayList<Integer> create(Object o) {
-		tds.setTeams((Teams)o);
-		tds.setAction("create");
-		return tds.objectToDB();
+	public ArrayList<Integer> create(Teams teams) {
+		this.teams=teams;
+		return tds.objectToDB(this.teams.getTeams());
 	}
 	@Override
-	public ArrayList<Integer> update(Object o) {
-		tds.setTeams((Teams)o);
-		tds.setAction("update");
-		return tds.objectToDB();
+	public void update(Teams teams) {
+		this.teams=teams;
+		tds.objectToDB(this.teams.getTeams(),"update");
 	}
 	@Override
-	public ArrayList<Integer> delete(Object o) {
-		tds.setTeams((Teams)o);
-		tds.setAction("delete");
-		return tds.objectToDB();
+	public void delete(Teams teams) {
+		this.teams=teams;
+		tds.objectToDB(this.teams.getTeams(),"update");
 	}
 }

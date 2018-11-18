@@ -4,51 +4,43 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mfl.models.Player.Players;
+import com.mfl.dao.CommonDBServicesImp;
+import com.mfl.models.Player;
 import com.mfl.modules.Modules;
 
 @Service
-public class PlayerModule implements Modules {
+public class PlayerModule implements Modules <Players> {
 	
 	@Autowired
-	private PlayerDBServices pds;
+	private CommonDBServicesImp<Player> pds;
+	
+	@Autowired
+	private Players players;
 
 	@Override
 	public Players read() {
-		pds.dBToObject();
-		//getPds().getPlayers().displayPlayers();
-		//getPxs().objectToXML(getPds().getPlayers());
-		System.out.println("In read");
-		return pds.getPlayers();
+		players.setPlayers(pds.dBToObject("get_all_players"));
+		return players;
 	}
 	@Override
 	public Players read(int i) {
-		pds.dBToObject(i);
-		//getPds().getPlayers().displayPlayers();
-		//pxs.objectToXML(pds.getPlayers());
-		return pds.getPlayers();
+		players.setPlayers(pds.dBToObject(i,"get_player_byID"));;
+		return players;
 	}
 	@Override
-	public ArrayList<Integer> create(Object p) {
-		
-		//Players players = pxs.xMLToObject(xmlResource);
-		pds.setPlayers((Players)p);
-		pds.setAction("create");
-		return pds.objectToDB();
+	public ArrayList<Integer> create(Players players) {
+		this.players=players;
+		return pds.objectToDB(this.players.getPlayers());
 	}
 	@Override
-	public ArrayList<Integer> update(Object p) {
-		//Players players = pxs.xMLToObject(xmlResource);
-		//players.displayPlayers();
-		pds.setPlayers((Players)p);
-		pds.setAction("update");
-		return pds.objectToDB();
+	public void update(Players players) {
+		this.players=players;
+		pds.objectToDB(this.players.getPlayers(),"update");
 	}
 	@Override
-	public ArrayList<Integer> delete(Object p) {
-		//Players players = pxs.xMLToObject(xmlResource);
-		//players.displayPlayers();
-		pds.setPlayers((Players)p);
-		pds.setAction("delete");
-		return pds.objectToDB();
+	public void delete(Players players) {
+		this.players=players;
+		pds.objectToDB(this.players.getPlayers(),"delete");	
 	}
 }
+

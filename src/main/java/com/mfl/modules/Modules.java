@@ -2,24 +2,17 @@ package com.mfl.modules;
 
 import java.util.ArrayList;
 
-public interface Modules {
+public interface Modules <T> {
 
-	//public Boolean create();
 	
-	//public Boolean create(Document xmlresource);
-	
-	//public Boolean update(Document xmlResource);
-	
-	public Object read();
-	
-	//public Boolean delete(Document xmlResource);
+	public T read();
 
-	public Object read(int i);
+	public T read(int i);
 
-	ArrayList<Integer> create(Object o);
+	public ArrayList<Integer> create(T o);
 
-	ArrayList<Integer> delete(Object o);
+	public void delete(T o);
 
-	ArrayList<Integer> update(Object o);
+	public void update(T o);
 	
 }

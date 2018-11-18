@@ -17,7 +17,7 @@ import com.mfl.modules.Modules;
 public class IplTeamController {
 	
 	@Autowired
-	private Modules iplTeamModule;
+	private Modules<IplTeams> iplTeamModule;
 
 	@RequestMapping("/iplTeams")
 	public IplTeams getIplTeams()
@@ -45,20 +45,20 @@ public class IplTeamController {
 	}
 	
 	@RequestMapping(value="/iplTeams/delete",method=RequestMethod.DELETE)
-	public ArrayList<Integer> deleteIplTeams(@RequestBody Object o)
+	public void deleteIplTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		IplTeams it = mapper.convertValue(o,IplTeams.class);
-		return iplTeamModule.delete(it);
+		iplTeamModule.delete(it);
 		
 	}
 	
 	@RequestMapping(value="/iplTeams/update",method=RequestMethod.PUT)
-	public ArrayList<Integer> updateIplTeams(@RequestBody Object o)
+	public void updateIplTeams(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		IplTeams it = mapper.convertValue(o,IplTeams.class);
-		return iplTeamModule.update(it);
+		iplTeamModule.update(it);
 		
 	}
 

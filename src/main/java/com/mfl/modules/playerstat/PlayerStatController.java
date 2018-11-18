@@ -16,7 +16,7 @@ import com.mfl.modules.Modules;
 public class PlayerStatController {
 	
 	@Autowired
-	private Modules playerStatModule;
+	private Modules<PlayerStats> playerStatModule;
 
 	@RequestMapping("/playerStats")
 	public PlayerStats getPlayerStats()
@@ -39,19 +39,19 @@ public class PlayerStatController {
 	}
 	
 	@RequestMapping(value="/playerStats/delete",method=RequestMethod.DELETE)
-	public ArrayList<Integer> deletePlayerStats(@RequestBody Object o)
+	public void deletePlayerStats(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		PlayerStats p = mapper.convertValue(o,PlayerStats.class);
-		return playerStatModule.delete(p);
+		playerStatModule.delete(p);
 	}
 	
 	@RequestMapping(value="/playerStats/update",method=RequestMethod.PUT)
-	public ArrayList<Integer> updatePlayerStats(@RequestBody Object o)
+	public void updatePlayerStats(@RequestBody Object o)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		PlayerStats p = mapper.convertValue(o,PlayerStats.class);
-		return playerStatModule.update(p);
+		playerStatModule.update(p);
 	}
 
 }

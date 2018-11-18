@@ -4,13 +4,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -23,16 +31,23 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Table (name="IPL_TEAM_MASTER")
-public class IplTeam {
+@NamedNativeQueries(
+{@NamedNativeQuery(name="get_all_iplTeams", query="select ipl_team_id as id, ipl_team_name as name from IPL_TEAM_MASTER",resultSetMapping="iplTeamMapping"),
+@NamedNativeQuery(name="get_iplTeam_byID", query="select * from IPL_TEAM_MASTER where ipl_team_id=:id",resultSetMapping="iplTeamMapping_all_fields")})
+@SqlResultSetMappings(
+{@SqlResultSetMapping(name="iplTeamMapping",classes= {@ConstructorResult(targetClass = IplTeam.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
+@SqlResultSetMapping(name="iplTeamMapping_all_fields",entities= {@EntityResult(entityClass=IplTeam.class,fields= {@FieldResult(name="id", column="ipl_team_id"),@FieldResult(name="name", column="ipl_team_name"),@FieldResult(name="version", column="version")})})})
+
+public class IplTeam extends BaseEntity {
 	
 	@Id @GeneratedValue
 	@Column (name="IPL_TEAM_ID")
 	private int id;
-	@Column (name="TEAM_NAME")
+	@Column (name="IPL_TEAM_NAME")
 	private String name;
 	/*@Column (name="TEAM_OWNER")
 	private String owner;*/
-	@OneToMany (fetch=FetchType.EAGER)
+	@OneToMany (fetch=FetchType.LAZY)
 	@JoinTable(name="IPL_TEAM_COMP",
 			   joinColumns=@JoinColumn(name="IPL_TEAM_ID"),
 			inverseJoinColumns=@JoinColumn(name="PLAYER_ID")
@@ -74,27 +89,7 @@ public class IplTeam {
 		@XmlElement(name = "iplTeam")
 		public void setIplTeams(ArrayList<IplTeam> teams) {
 			this.teams = teams;
-		}
-		
-		public void displayIplTeams()
-		{
-			System.out.println("Ipl Teams:"+getIplTeams().size());
-			for(int i=0;i<getIplTeams().size();i++)
-			{
-				System.out.println("------\nID = "+getIplTeams().get(i).getId()+
-						"\nName = "+getIplTeams().get(i).getName());
-						/*"\nTeam Composition ="+getTeams().get(i).getTeamComp().size());
-				for(int j=0;j<getTeams().get(i).getTeamComp().size();j++)
-				{
-					//System.out.println("Comp ID:"+((ArrayList<TeamComp>) getTeams().get(i).getTeamComp()).get(j).getId());
-					//System.out.println("Team ID:"+((ArrayList<TeamComp>) getTeams().get(i).getTeamComp()).get(j).getTeamId());
-					//System.out.println("Player ID:"+((ArrayList<TeamComp>) getTeams().get(i).getTeamComp()).get(j).getPlayerId());
-					System.out.println("Data Load Complete... Display Object are WIP");
-				}*/
-			}
-						
-		}
-		
+		}		
 		
 	}
 

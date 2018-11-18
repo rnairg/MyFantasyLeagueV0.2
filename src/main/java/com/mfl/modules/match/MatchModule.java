@@ -4,41 +4,41 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mfl.models.Match.Matches;
+import com.mfl.dao.CommonDBServicesImp;
+import com.mfl.models.Match;
 import com.mfl.modules.Modules;
+
 @Service
-public class MatchModule implements Modules {
+public class MatchModule implements Modules<Matches> {
 	@Autowired
-	private MatchDBServices mds;
+	private CommonDBServicesImp<Match> mds;
+	
+	@Autowired
+	private Matches matches;
+	
 	@Override
 	public Matches read() {
-		mds.dBToObject();
-		//getPds().getPlayers().displayPlayers();
-		//mxs.objectToXML(mds.getMatches());
-		return mds.getMatches();
+		matches.setMatches(mds.dBToObject("get_all_matches"));
+		return matches;
 	}
 	@Override
 	public Matches read(int i) {
-		mds.dBToObject(i);
-		//getPds().getPlayers().displayPlayers();
-		//mxs.objectToXML(mds.getMatches());
-		return mds.getMatches();
+		matches.setMatches(mds.dBToObject(i,"get_match_byID"));;
+		return matches;
 	}
 	@Override
-	public ArrayList<Integer> create(Object o) {
-		mds.setMatches((Matches)o);
-		mds.setAction("create");
-		return mds.objectToDB();
+	public ArrayList<Integer> create(Matches matches) {
+		this.matches=matches;
+		return mds.objectToDB(this.matches.getMatches());
 	}
 	@Override
-	public ArrayList<Integer> delete(Object o) {
-		mds.setMatches((Matches)o);
-		mds.setAction("delete");
-		return mds.objectToDB();
+	public void delete(Matches matches) {
+		this.matches=matches;
+		mds.objectToDB(this.matches.getMatches(),"delete");
 	}
 	@Override
-	public ArrayList<Integer> update(Object o) {
-		mds.setMatches((Matches)o);
-		mds.setAction("update");
-		return mds.objectToDB();
+	public void update(Matches matches) {
+		this.matches=matches;
+		mds.objectToDB(this.matches.getMatches(),"update");
 	}
 }
