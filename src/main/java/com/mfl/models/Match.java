@@ -112,6 +112,12 @@ public class Match extends BaseEntity {
 	public void setWicketTwo(int wicketTwo) {
 		this.wicketTwo = wicketTwo;
 	}
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	public Match() {
 		
 	}

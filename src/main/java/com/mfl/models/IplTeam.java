@@ -75,6 +75,12 @@ public class IplTeam extends BaseEntity {
 	public void setPlayers(Collection<Player> players) {
 		this.players = players;
 	}
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	
 	@XmlRootElement(name = "iplTeams") //Model Class for Teams XML
 	@Component

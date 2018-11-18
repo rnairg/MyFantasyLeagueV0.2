@@ -94,6 +94,12 @@ public class Player extends BaseEntity { //Model for Table PLAYER_MASTER
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	/*public IplTeam getIplTeam() {
 		return iplTeam;
 	}
@@ -135,18 +141,6 @@ public class Player extends BaseEntity { //Model for Table PLAYER_MASTER
 		{
 			this.players.add(player);
 		}
-		
-		public void displayPlayers()
-		{
-			System.out.println("Players:"+getPlayers().size());
-			for(int i=0;i<getPlayers().size();i++)
-			{
-				System.out.println("------\nID = "+getPlayers().get(i).getId()+
-						"\nName = "+getPlayers().get(i).getName()+
-						"\nCategory = "+getPlayers().get(i).getCategory());
-			}
-		}
-
 	}
 	
 }

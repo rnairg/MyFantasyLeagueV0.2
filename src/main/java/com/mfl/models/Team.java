@@ -84,6 +84,12 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	public Team(int id, String name) {
 		this.id=id;
 		this.name=name;

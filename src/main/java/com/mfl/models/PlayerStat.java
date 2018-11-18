@@ -98,6 +98,12 @@ public class PlayerStat extends BaseEntity {
 		this.player=player;
 		
 	}
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	
 	@XmlRootElement(name = "playerStats")//Model Class for PlayerStats XML
 	@Component
