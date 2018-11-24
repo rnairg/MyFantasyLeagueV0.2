@@ -21,18 +21,21 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.stereotype.Component;
 
-@Entity
+@Entity (name="playerStat")
 @Table (name="PLAYER_STATS")
 @NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_playerStats", query="select player_stat_id as id, player_id as player from PLAYER_STATS",resultSetMapping="playerStatsMapping"),
-@NamedNativeQuery(name="get_playerStat_byID", query="select * from PLAYER_STATS where player_stat_id=:id",resultSetMapping="playerStatsMapping_all_fields")})
+{@NamedNativeQuery(name="get_all_playerStats", query="select player_stats_id as id from PLAYER_STATS",resultSetMapping="playerStatsMapping")})
+@NamedQueries(
+{@NamedQuery(name="get_playerStat_byID", query="from playerStat where id=:id")})
 @SqlResultSetMappings(
-{@SqlResultSetMapping(name="playerStatsMapping",classes= {@ConstructorResult(targetClass = PlayerStat.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="player")})}),
+{@SqlResultSetMapping(name="playerStatsMapping",classes= {@ConstructorResult(targetClass = PlayerStat.class,columns= {@ColumnResult(name="id")/*,@ColumnResult(name="player")*/})}),
 @SqlResultSetMapping(name="playerStatsMapping_all_fields",
 entities= {@EntityResult(entityClass=PlayerStat.class,fields= 
-		{@FieldResult(name="id", column="player_stat_id"),
+		{@FieldResult(name="id", column="player_stats_id"),
 		@FieldResult(name="player", column="player_id"),
 		@FieldResult(name="match", column="match_id"),
 		@FieldResult(name="wickets", column="wickets"),
@@ -50,7 +53,7 @@ public class PlayerStat extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name="MATCH_ID")
 	private Match match;
-	@Column (name="WICKTES")
+	@Column (name="WICKETS")
 	private int wickets;
 	@Column (name="CATCHES")
 	private int catches;
@@ -92,17 +95,20 @@ public class PlayerStat extends BaseEntity {
 	public void setRuns(int runs) {
 		this.runs = runs;
 	}
-	public PlayerStat(int id, Player player) {
+	public PlayerStat(int id/*, Player player*/) {
 		
 		this.id=id;
-		this.player=player;
+		//this.player=player;
 		
 	}
 	public int getVersion() {
-		return version;
+		return super.getVersion();
 	}
 	public void setVersion(int version) {
-		this.version = version;
+		super.setVersion(version);
+	}
+	public PlayerStat() {
+		
 	}
 	
 	@XmlRootElement(name = "playerStats")//Model Class for PlayerStats XML

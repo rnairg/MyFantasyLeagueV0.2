@@ -6,8 +6,14 @@ import javax.persistence.Version;
 @MappedSuperclass
 public class BaseEntity {
 	@Version
-	protected int version;
+	private int version;
 	
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	public BaseEntity() {
 		
 	}

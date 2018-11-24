@@ -24,7 +24,7 @@ public class PlayerStatModule implements Modules<PlayerStats> {
 	}
 	@Override
 	public PlayerStats read(int i) {
-		playerStats.setPlayerStats(psds.dBToObject(i,"get_playerStats_byId"));
+		playerStats.setPlayerStats(psds.dBToObject(i,"get_playerStat_byID"));
 		return playerStats;
 	}
 	@Override

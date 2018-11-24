@@ -9,6 +9,7 @@ import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
+import javax.persistence.FetchType;
 import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,17 +25,20 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.stereotype.Component;
 
-@Entity
+@Entity (name="match")
 @Table(name = "MATCH_MASTER")
 @NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_matches", query="select match_id as id, team_one_id as teamOne, team_two_id as teamTwo from MATCH_MASTER",resultSetMapping="matchMapping"),
-@NamedNativeQuery(name="get_match_byID", query="select * from MATCH_MASTER where match_id=:id",resultSetMapping="matchMapping_all_fields")})
+{@NamedNativeQuery(name="get_all_matches", query="select match_id as id from MATCH_MASTER",resultSetMapping="matchMapping")})
+@NamedQueries(
+{@NamedQuery(name="get_match_byID", query="from match where id=:id")})
 @SqlResultSetMappings(
 {@SqlResultSetMapping(name="matchMapping",
 		classes= {@ConstructorResult(targetClass = Match.class,
-		columns= {@ColumnResult(name="id"),@ColumnResult(name="teamOne"),@ColumnResult(name="teamTwo")})}),
+		columns= {@ColumnResult(name="id")/*,@ColumnResult(name="teamOne"),@ColumnResult(name="teamTwo")*/})}),
 @SqlResultSetMapping(name="matchMapping_all_fields",
 entities= {@EntityResult(entityClass=Match.class,
 fields= {@FieldResult(name="id", column="match_id"),
@@ -51,10 +55,10 @@ public class Match extends BaseEntity {
 	@Id @GeneratedValue
 	@Column (name="MATCH_ID")
 	private int id;
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn (name="TEAM_ONE_ID")
 	private IplTeam teamOne;
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn (name="TEAM_TWO_ID")
 	private IplTeam teamTwo;
 	@Column (name="SCORE_ONE")
@@ -113,18 +117,18 @@ public class Match extends BaseEntity {
 		this.wicketTwo = wicketTwo;
 	}
 	public int getVersion() {
-		return version;
+		return super.getVersion();
 	}
 	public void setVersion(int version) {
-		this.version = version;
+		super.setVersion(version);
 	}
 	public Match() {
 		
 	}
-	public Match(int id, IplTeam iplTeam1, IplTeam iplTeam2) {
+	public Match(int id/*, IplTeam iplTeam1, IplTeam iplTeam2*/) {
 		this.id=id;
-		this.teamOne=iplTeam1;
-		this.teamTwo=iplTeam2;
+		//this.teamOne=iplTeam1;
+		//this.teamTwo=iplTeam2;
 		
 	}
 	/*public Collection<PlayerStats> getPlayerStats() {

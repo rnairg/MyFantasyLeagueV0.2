@@ -14,33 +14,25 @@ public class PlayerModule implements Modules <Players> {
 	@Autowired
 	private CommonDBServicesImp<Player> pds;
 	
-	@Autowired
-	private Players players;
-
 	@Override
 	public Players read() {
-		players.setPlayers(pds.dBToObject("get_all_players"));
-		return players;
+		return new Players(pds.dBToObject("get_all_players"));
 	}
 	@Override
 	public Players read(int i) {
-		players.setPlayers(pds.dBToObject(i,"get_player_byID"));;
-		return players;
+		return new Players(pds.dBToObject(i,"get_player_byID"));
 	}
 	@Override
 	public ArrayList<Integer> create(Players players) {
-		this.players=players;
-		return pds.objectToDB(this.players.getPlayers());
+		return pds.objectToDB(players.getPlayers());
 	}
 	@Override
 	public void update(Players players) {
-		this.players=players;
-		pds.objectToDB(this.players.getPlayers(),"update");
+		pds.objectToDB(players.getPlayers(),"update");
 	}
 	@Override
 	public void delete(Players players) {
-		this.players=players;
-		pds.objectToDB(this.players.getPlayers(),"delete");	
+		pds.objectToDB(players.getPlayers(),"delete");	
 	}
 }
 

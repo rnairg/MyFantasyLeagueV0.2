@@ -26,14 +26,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-@Entity
+@Entity (name="iplTeam")
 @Table (name="IPL_TEAM_MASTER")
 @NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_iplTeams", query="select ipl_team_id as id, ipl_team_name as name from IPL_TEAM_MASTER",resultSetMapping="iplTeamMapping"),
-@NamedNativeQuery(name="get_iplTeam_byID", query="select * from IPL_TEAM_MASTER where ipl_team_id=:id",resultSetMapping="iplTeamMapping_all_fields")})
+{@NamedNativeQuery(name="get_all_iplTeams", query="select ipl_team_id as id, ipl_team_name as name from IPL_TEAM_MASTER",resultSetMapping="iplTeamMapping")})
+@NamedQueries(
+{@NamedQuery(name="get_iplTeam_byID", query="from iplTeam where id=:id")})
 @SqlResultSetMappings(
 {@SqlResultSetMapping(name="iplTeamMapping",classes= {@ConstructorResult(targetClass = IplTeam.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
 @SqlResultSetMapping(name="iplTeamMapping_all_fields",entities= {@EntityResult(entityClass=IplTeam.class,fields= {@FieldResult(name="id", column="ipl_team_id"),@FieldResult(name="name", column="ipl_team_name"),@FieldResult(name="version", column="version")})})})
@@ -47,7 +50,7 @@ public class IplTeam extends BaseEntity {
 	private String name;
 	/*@Column (name="TEAM_OWNER")
 	private String owner;*/
-	@OneToMany (fetch=FetchType.LAZY)
+	@OneToMany (fetch=FetchType.EAGER)
 	@JoinTable(name="IPL_TEAM_COMP",
 			   joinColumns=@JoinColumn(name="IPL_TEAM_ID"),
 			inverseJoinColumns=@JoinColumn(name="PLAYER_ID")
@@ -76,12 +79,18 @@ public class IplTeam extends BaseEntity {
 		this.players = players;
 	}
 	public int getVersion() {
-		return version;
+		return super.getVersion();
 	}
 	public void setVersion(int version) {
-		this.version = version;
+		super.setVersion(version);
 	}
-	
+	public IplTeam() {
+		
+	}
+	public IplTeam(int id, String name) {
+		this.id=id;
+		this.name=name;
+	}
 	@XmlRootElement(name = "iplTeams") //Model Class for Teams XML
 	@Component
 	public static class IplTeams{

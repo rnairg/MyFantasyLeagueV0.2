@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.mfl.models.BaseEntity;
@@ -12,28 +13,27 @@ import com.mfl.models.BaseEntity;
 public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServicesInt<T> {
 
 	@Autowired
-	private ArrayList<T> t;
-	
-	@Autowired
 	private SessionFactory sessionFactory;
 		
 	@Override
 	public ArrayList<Integer> objectToDB(ArrayList<T> obj) {
 		Session s = sessionFactory.getCurrentSession();
+		Transaction txn = s.getTransaction();
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		try {
-			s.beginTransaction();
+			if(!txn.isActive()) {
+				txn.begin();
+			}
 			for(T t1:obj)
 			{
 					result.add((int)s.save(t1));
 			}
-			s.getTransaction().commit();
+			txn.commit();
 			return result;
 		}catch(Exception e) {
-			System.out.println(""+e);
-			return result;
+			txn.rollback();
+			throw e;
 		}finally {
-			//s.close();
 		}
 	}
 
@@ -42,16 +42,18 @@ public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServi
 	public ArrayList<T> dBToObject(int key, String queryName) {
 		Session s;
 		s = sessionFactory.getCurrentSession();
+		Transaction txn = s.getTransaction();
 		try {
-			s.beginTransaction();	
-			this.t = (ArrayList<T>)s.createNamedQuery(queryName).setParameter("id",key).getResultList();
-			return t;
+			if(!txn.isActive()) {
+				txn.begin();
+			}
+			return (ArrayList<T>)s.createNamedQuery(queryName).setParameter("id",key).getResultList();
 		}catch (Exception e)
 		{
-			System.out.println(""+e);
-			return t;
+			//e.printStackTrace();
+			//return null;
+			throw e;
 		}finally {
-	
 		}
 	}
 
@@ -60,24 +62,28 @@ public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServi
 	public ArrayList<T> dBToObject(String queryName) {
 		Session s;
 		s = sessionFactory.getCurrentSession();
+		Transaction txn = s.getTransaction();
 		try {
-			s.beginTransaction();	
-			this.t = (ArrayList<T>)s.createNamedQuery(queryName).getResultList();
-			return t;
+			if(!txn.isActive()) {
+				txn.begin();
+			}
+			return (ArrayList<T>)s.createNamedQuery(queryName).getResultList();
+			
 		}catch (Exception e)
 		{
-			System.out.println(""+e);
-			return t;
+			throw e;
 		}finally {
-	
 		}
 	}
 
 	@Override
 	public void objectToDB(ArrayList<T> obj, String action) {
 		Session s = sessionFactory.getCurrentSession();
+		Transaction txn = s.getTransaction();
 		try {
-			s.beginTransaction();
+			if(!txn.isActive()) {
+				txn.begin();
+			}
 			for(T t1:obj)
 			{
 				if(action.equals("update"))
@@ -89,11 +95,11 @@ public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServi
 					s.delete(t1);
 				}
 			}
-			s.getTransaction().commit();
+			txn.commit();
 		}catch(Exception e) {
-			System.out.println(""+e);
+			txn.rollback();
+			throw e;
 		}finally {
-
 		}
 		
 	}

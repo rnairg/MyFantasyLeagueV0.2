@@ -19,16 +19,21 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.stereotype.Component;
 
 @Entity (name="player")
 @Table (name="PLAYER_MASTER")//,uniqueConstraints=@UniqueConstraint(columnNames= {"PLAYER_NAME","PLAYER_IPL_TEAM"}))
+@NamedQueries(
+{@NamedQuery(name="get_player_byID", query="from player as p where p.id=:id"/*,resultSetMapping="playerMapping_all_fields"*/)})
+
 @NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_players", query="select player_id as id, player_name as name from PLAYER_MASTER",resultSetMapping="playerMapping"),
-@NamedNativeQuery(name="get_player_byID", query="select * from PLAYER_MASTER where player_id=:id",resultSetMapping="playerMapping_all_fields")})
+{@NamedNativeQuery(name="get_all_players", query="select player_id as id, player_name as name from PLAYER_MASTER",resultSetMapping="playerMapping")})
 @SqlResultSetMappings(
 {@SqlResultSetMapping(name="playerMapping",classes= {@ConstructorResult(targetClass = Player.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
-@SqlResultSetMapping(name="playerMapping_all_fields",entities= {@EntityResult(entityClass=Player.class,fields= {@FieldResult(name="id", column="player_id"),@FieldResult(name="name", column="player_name"),@FieldResult(name="category", column="player_category"),@FieldResult(name="nationality", column="player_nationality"),@FieldResult(name="version", column="version")})})})
+@SqlResultSetMapping(name="playerMapping_all_fields",
+entities= {@EntityResult(entityClass=Player.class,fields= {@FieldResult(name="id", column="player_id"),@FieldResult(name="name", column="player_name"),@FieldResult(name="category", column="player_category"),@FieldResult(name="nationality", column="player_nationality"),@FieldResult(name="version", column="version")})})})
 public class Player extends BaseEntity { //Model for Table PLAYER_MASTER
 	
 	@Id @GeneratedValue
@@ -95,10 +100,10 @@ public class Player extends BaseEntity { //Model for Table PLAYER_MASTER
 		this.category = category;
 	}
 	public int getVersion() {
-		return version;
+		return super.getVersion();
 	}
 	public void setVersion(int version) {
-		this.version = version;
+		super.setVersion(version);
 	}
 	/*public IplTeam getIplTeam() {
 		return iplTeam;
@@ -127,20 +132,24 @@ public class Player extends BaseEntity { //Model for Table PLAYER_MASTER
 	@Component
 	public static class Players { //Model for Player XML
 		
-		private ArrayList<Player> players = new ArrayList<Player>();
+		@XmlElement(name="player")
+		private ArrayList<Player> players;
+		
+		public Players() {
+		}
+		
+		public Players(ArrayList<Player> players) {
+			this.players=players;
+		}
+		
 		public ArrayList<Player> getPlayers() {
 			return players;
 		}
 		
-		@XmlElement(name="player")
+		/*@XmlElement(name="player")
 		public void setPlayers(ArrayList<Player> players) {
 			this.players = players;
-		}
-		
-		public void createPlayerList(Player player)
-		{
-			this.players.add(player);
-		}
+		}*/
 	}
 	
 }

@@ -25,20 +25,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-@Entity
+@Entity (name="team")
 @Table (name="TEAM_MASTER")
 @NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_teams", query="select team_id as id, team_name as name from TEAM_MASTER",resultSetMapping="teamMapping"),
-@NamedNativeQuery(name="get_team_byID", query="select * from TEAM_MASTER where team_id=:id",resultSetMapping="teamMapping_all_fields")})
+{@NamedNativeQuery(name="get_all_teams", query="select team_id as id, team_name as name from TEAM_MASTER",resultSetMapping="teamMapping")})
+@NamedQueries(
+{@NamedQuery(name="get_team_byID", query="from team where team_id=:id")})
 @SqlResultSetMappings(
 {@SqlResultSetMapping(name="teamMapping",classes= {@ConstructorResult(targetClass = Team.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
-@SqlResultSetMapping(name="teamMapping_all_fields",entities= {@EntityResult(entityClass=Team.class,
-fields= {@FieldResult(name="id", column="team_id"),
-		@FieldResult(name="owner", column="team_owner"),
-		@FieldResult(name="version", column="version")})})})
+@SqlResultSetMapping(name="teamMapping_all_fields",
+entities= {
+		@EntityResult(
+				entityClass=Team.class,
+				fields= {
+							@FieldResult(name="id", column="team_id"),
+							@FieldResult(name="name", column="team_name"),
+							@FieldResult(name="owner", column="team_owner"),
+							@FieldResult(name="version", column="version")
+						})
+		})
+})
 
 public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 
@@ -85,14 +96,17 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 		this.owner = owner;
 	}
 	public int getVersion() {
-		return version;
+		return super.getVersion();
 	}
 	public void setVersion(int version) {
-		this.version = version;
+		super.setVersion(version);
 	}
 	public Team(int id, String name) {
 		this.id=id;
 		this.name=name;
+	}
+	public Team() {
+		
 	}
 	
 	@XmlRootElement(name = "teams") //Model Class for Teams XML

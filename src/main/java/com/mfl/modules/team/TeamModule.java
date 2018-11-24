@@ -24,7 +24,7 @@ public class TeamModule implements Modules<Teams> {
 	}
 	@Override
 	public Teams read(int i) {
-		teams.setTeams(tds.dBToObject(i,"get_team_byId"));
+		teams.setTeams(tds.dBToObject(i,"get_team_byID"));
 		return teams;		
 	}
 	@Override
