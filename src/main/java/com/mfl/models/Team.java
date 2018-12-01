@@ -2,27 +2,20 @@ package com.mfl.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
-import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
-import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
@@ -32,24 +25,9 @@ import org.springframework.stereotype.Component;
 
 @Entity (name="team")
 @Table (name="TEAM_MASTER")
-@NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_teams", query="select team_id as id, team_name as name from TEAM_MASTER",resultSetMapping="teamMapping")})
 @NamedQueries(
-{@NamedQuery(name="get_team_byID", query="from team where team_id=:id")})
-@SqlResultSetMappings(
-{@SqlResultSetMapping(name="teamMapping",classes= {@ConstructorResult(targetClass = Team.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
-@SqlResultSetMapping(name="teamMapping_all_fields",
-entities= {
-		@EntityResult(
-				entityClass=Team.class,
-				fields= {
-							@FieldResult(name="id", column="team_id"),
-							@FieldResult(name="name", column="team_name"),
-							@FieldResult(name="owner", column="team_owner"),
-							@FieldResult(name="version", column="version")
-						})
-		})
-})
+{@NamedQuery(name="get_team_byID", query="from team t where t.id=:id"),
+@NamedQuery(name="get_all_teams", query="select new com.mfl.models.Team(t.id, t.name, t.owner) from team t")})
 
 public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 
@@ -68,7 +46,17 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 	@GenericGenerator(name="increment-gen",strategy="increment")
 	@CollectionId(columns= {@Column(name="TEAM_COMP_ID")},generator="increment-gen",type=@Type(type="long"))
 	private Collection<Player> players = new ArrayList<Player>();
+	
+	//@Formula(value = "sum(playerStat.points)")
+	@Transient
+	private int points;
 				
+	public int getPoints() {
+		return points;
+	}
+	public void setPoints(int points) {
+		this.points = points;
+	}
 	public Collection<Player> getPlayers() {
 		return players;
 	}
@@ -101,9 +89,16 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 	public void setVersion(int version) {
 		super.setVersion(version);
 	}
-	public Team(int id, String name) {
+	public Team(int id, String name, String owner) {
 		this.id=id;
 		this.name=name;
+		this.owner=owner;
+	}
+	public Team(int id, String name, String owner, int points) {
+		this.id=id;
+		this.name=name;
+		this.owner=owner;
+		this.points=points;
 	}
 	public Team() {
 		
@@ -113,15 +108,15 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 	@Component
 	public static class Teams{
 		
-		private ArrayList<Team> teams = new ArrayList<Team>();
+		@XmlElement(name = "team")
+		private List<Team> teams = new ArrayList<Team>();
 		
-		public ArrayList<Team> getTeams() {
-			return teams;
+		public Teams(ArrayList<Team> teams) {
+			this.teams=teams;
 		}
 
-		@XmlElement(name = "team")
-		public void setTeams(ArrayList<Team> teams) {
-			this.teams = teams;
-		}	
+		public List<Team> getTeams() {
+			return teams;
+		}
 	}
 }

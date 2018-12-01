@@ -11,35 +11,41 @@ import com.mfl.modules.Modules;
 @Service
 public class PlayerStatModule implements Modules<PlayerStats> {
 	
+	private final int RUNS_FACTOR=1;
+	private final int CATCHES_FACTOR=10;
+	private final int WICKETS_FACTOR=25;
 	@Autowired
 	private CommonDBServicesImp<PlayerStat> psds;
 	
-	@Autowired
-	private PlayerStats playerStats;
-
 	@Override
 	public PlayerStats read() {
-		playerStats.setPlayerStats(psds.dBToObject("get_all_playerStats"));
-		return playerStats;
+		return new PlayerStats(psds.dBToObject("get_all_playerStats"));
 	}
 	@Override
 	public PlayerStats read(int i) {
-		playerStats.setPlayerStats(psds.dBToObject(i,"get_playerStat_byID"));
-		return playerStats;
+		return new PlayerStats(psds.dBToObject(i,"get_playerStat_byID"));
 	}
 	@Override
 	public ArrayList<Integer> create(PlayerStats playerStats) {
-		this.playerStats=playerStats;
-		return psds.objectToDB(this.playerStats.getPlayerStats());
+		return psds.objectToDB(enrichPlayerStats(playerStats).getPlayerStats());
 	}
 	@Override
 	public void delete(PlayerStats playerStats) {
-		this.playerStats=playerStats;
-		psds.objectToDB(this.playerStats.getPlayerStats(),"delete");
+		psds.objectToDB(playerStats.getPlayerStats(),"delete");
 	}
 	@Override
 	public void update(PlayerStats playerStats) {
-		this.playerStats=playerStats;
-		psds.objectToDB(this.playerStats.getPlayerStats(),"update");
+		psds.objectToDB(enrichPlayerStats(playerStats).getPlayerStats(),"update");
+	}
+	
+	private int calculatePoints(int wickets, int catches, int runs) {
+		int points = (wickets*WICKETS_FACTOR)+(catches*CATCHES_FACTOR)+(runs*RUNS_FACTOR);
+		return points;
+	}
+	private PlayerStats enrichPlayerStats(PlayerStats playerStats) {
+		for(PlayerStat ps:playerStats.getPlayerStats()) {
+			ps.setPoints(calculatePoints(ps.getWickets(),ps.getCatches(),ps.getRuns()));
+		}
+		return playerStats;
 	}
 }

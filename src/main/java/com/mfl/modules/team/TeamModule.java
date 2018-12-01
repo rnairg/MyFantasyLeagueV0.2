@@ -14,32 +14,24 @@ public class TeamModule implements Modules<Teams> {
 	@Autowired
 	private CommonDBServicesImp<Team> tds;
 	
-	@Autowired
-	Teams teams;
-
 	@Override
 	public Teams read() {
-		teams.setTeams(tds.dBToObject("get_all_teams"));
-		return teams;
+		return new Teams(tds.dBToObject("get_all_teams"));
 	}
 	@Override
 	public Teams read(int i) {
-		teams.setTeams(tds.dBToObject(i,"get_team_byID"));
-		return teams;		
+		return new Teams(tds.dBToObject(i,"get_team_byID"));		
 	}
 	@Override
 	public ArrayList<Integer> create(Teams teams) {
-		this.teams=teams;
-		return tds.objectToDB(this.teams.getTeams());
+		return tds.objectToDB(teams.getTeams());
 	}
 	@Override
 	public void update(Teams teams) {
-		this.teams=teams;
-		tds.objectToDB(this.teams.getTeams(),"update");
+		tds.objectToDB(teams.getTeams(),"update");
 	}
 	@Override
 	public void delete(Teams teams) {
-		this.teams=teams;
-		tds.objectToDB(this.teams.getTeams(),"update");
+		tds.objectToDB(teams.getTeams(),"update");
 	}
 }

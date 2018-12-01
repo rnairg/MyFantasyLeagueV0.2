@@ -13,32 +13,24 @@ public class MatchModule implements Modules<Matches> {
 	@Autowired
 	private CommonDBServicesImp<Match> mds;
 	
-	@Autowired
-	private Matches matches;
-	
 	@Override
 	public Matches read() {
-		matches.setMatches(mds.dBToObject("get_all_matches"));
-		return matches;
+		return new Matches(mds.dBToObject("get_all_matches"));
 	}
 	@Override
 	public Matches read(int i) {
-		matches.setMatches(mds.dBToObject(i,"get_match_byID"));;
-		return matches;
+		return new Matches(mds.dBToObject(i,"get_match_byID"));
 	}
 	@Override
 	public ArrayList<Integer> create(Matches matches) {
-		this.matches=matches;
-		return mds.objectToDB(this.matches.getMatches());
+		return mds.objectToDB(matches.getMatches());
 	}
 	@Override
 	public void delete(Matches matches) {
-		this.matches=matches;
-		mds.objectToDB(this.matches.getMatches(),"delete");
+		mds.objectToDB(matches.getMatches(),"delete");
 	}
 	@Override
 	public void update(Matches matches) {
-		this.matches=matches;
-		mds.objectToDB(this.matches.getMatches(),"update");
+		mds.objectToDB(matches.getMatches(),"update");
 	}
 }

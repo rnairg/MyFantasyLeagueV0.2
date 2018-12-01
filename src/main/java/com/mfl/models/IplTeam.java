@@ -2,28 +2,19 @@ package com.mfl.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
-import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
-import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
@@ -33,13 +24,9 @@ import org.springframework.stereotype.Component;
 
 @Entity (name="iplTeam")
 @Table (name="IPL_TEAM_MASTER")
-@NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_iplTeams", query="select ipl_team_id as id, ipl_team_name as name from IPL_TEAM_MASTER",resultSetMapping="iplTeamMapping")})
 @NamedQueries(
-{@NamedQuery(name="get_iplTeam_byID", query="from iplTeam where id=:id")})
-@SqlResultSetMappings(
-{@SqlResultSetMapping(name="iplTeamMapping",classes= {@ConstructorResult(targetClass = IplTeam.class,columns= {@ColumnResult(name="id"),@ColumnResult(name="name")})}),
-@SqlResultSetMapping(name="iplTeamMapping_all_fields",entities= {@EntityResult(entityClass=IplTeam.class,fields= {@FieldResult(name="id", column="ipl_team_id"),@FieldResult(name="name", column="ipl_team_name"),@FieldResult(name="version", column="version")})})})
+{@NamedQuery(name="get_iplTeam_byID", query="from iplTeam where id=:id"),
+@NamedQuery(name="get_all_iplTeams", query="select new com.mfl.models.IplTeam(it.id,it.name) from iplTeam it")})
 
 public class IplTeam extends BaseEntity {
 	
@@ -95,16 +82,16 @@ public class IplTeam extends BaseEntity {
 	@Component
 	public static class IplTeams{
 		
-		private ArrayList<IplTeam> teams = new ArrayList<IplTeam>();
+		@XmlElement(name = "iplTeam")
+		private List<IplTeam> iplTeams = new ArrayList<IplTeam>();
 		
-		public ArrayList<IplTeam> getIplTeams() {
-			return teams;
+		public IplTeams(ArrayList<IplTeam> iplTeams) {
+			this.iplTeams=iplTeams;
 		}
 
-		@XmlElement(name = "iplTeam")
-		public void setIplTeams(ArrayList<IplTeam> teams) {
-			this.teams = teams;
-		}		
+		public List<IplTeam> getIplTeams() {
+			return iplTeams;
+		}	
 		
 	}
 

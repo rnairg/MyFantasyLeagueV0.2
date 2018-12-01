@@ -1,47 +1,27 @@
 package com.mfl.models;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
-import javax.persistence.EntityResult;
-import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToOne;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.stereotype.Component;
 
 @Entity (name="playerStat")
 @Table (name="PLAYER_STATS")
-@NamedNativeQueries(
-{@NamedNativeQuery(name="get_all_playerStats", query="select player_stats_id as id from PLAYER_STATS",resultSetMapping="playerStatsMapping")})
 @NamedQueries(
-{@NamedQuery(name="get_playerStat_byID", query="from playerStat where id=:id")})
-@SqlResultSetMappings(
-{@SqlResultSetMapping(name="playerStatsMapping",classes= {@ConstructorResult(targetClass = PlayerStat.class,columns= {@ColumnResult(name="id")/*,@ColumnResult(name="player")*/})}),
-@SqlResultSetMapping(name="playerStatsMapping_all_fields",
-entities= {@EntityResult(entityClass=PlayerStat.class,fields= 
-		{@FieldResult(name="id", column="player_stats_id"),
-		@FieldResult(name="player", column="player_id"),
-		@FieldResult(name="match", column="match_id"),
-		@FieldResult(name="wickets", column="wickets"),
-		@FieldResult(name="catches", column="catches"),
-		@FieldResult(name="runs", column="runs"),
-		@FieldResult(name="version", column="version")})})})
+{@NamedQuery(name="get_playerStat_byID", query="from playerStat where id=:id"),
+ @NamedQuery(name="get_all_playerStats", query="select new com.mfl.models.PlayerStat(ps.id) from playerStat ps")})
+
 public class PlayerStat extends BaseEntity {
 	
 	@Id @GeneratedValue
@@ -59,6 +39,15 @@ public class PlayerStat extends BaseEntity {
 	private int catches;
 	@Column (name="RUNS")
 	private int runs;
+	@Column (name="POINTS")
+	private int points;
+	
+	public int getPoints() {
+		return points;
+	}
+	public void setPoints(int points) {
+		this.points = points;
+	}
 	public int getId() {
 		return id;
 	}
@@ -115,15 +104,19 @@ public class PlayerStat extends BaseEntity {
 	@Component
 	public static class PlayerStats{
 		
-		private ArrayList<PlayerStat> playerStats = new ArrayList<PlayerStat>();
+		@XmlElement(name = "playerStat")
+		private List<PlayerStat> playerStats = new ArrayList<PlayerStat>();
+		
+		public PlayerStats(){
 
-		public ArrayList<PlayerStat> getPlayerStats() {
-			return playerStats;
 		}
 		
-		@XmlElement(name = "playerStat")
-		public void setPlayerStats(ArrayList<PlayerStat> playerStats) {
-			this.playerStats = playerStats;
-		}	
+		public PlayerStats(ArrayList<PlayerStat> playerStats){
+			this.playerStats=playerStats;
+		}
+
+		public List<PlayerStat> getPlayerStats() {
+			return playerStats;
+		}
 	}
 }

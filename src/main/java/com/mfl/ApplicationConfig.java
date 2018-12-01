@@ -1,6 +1,5 @@
 package com.mfl;
 
-import java.util.ArrayList;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -58,8 +57,5 @@ public class ApplicationConfig {
 		dataSource.setPassword(env.getProperty("spring.datasource.password"));
 		return dataSource;
 	}
-	@Bean
-	public <T> ArrayList<T> getTList(){
-		return new ArrayList<T>();
-	}
+
 }

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfl.models.Team.Teams;
 import com.mfl.modules.Modules;
@@ -22,7 +21,6 @@ public class TeamController {
 	{
 		System.out.println("In Controller");
 		return (Teams) teamModule.read();
-		
 	}
 	
 	@RequestMapping("/teams/team/{id}")

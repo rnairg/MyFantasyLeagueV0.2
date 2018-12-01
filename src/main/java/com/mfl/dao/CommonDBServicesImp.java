@@ -1,7 +1,7 @@
 package com.mfl.dao;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -16,7 +16,7 @@ public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServi
 	private SessionFactory sessionFactory;
 		
 	@Override
-	public ArrayList<Integer> objectToDB(ArrayList<T> obj) {
+	public ArrayList<Integer> objectToDB(List<T> list) {
 		Session s = sessionFactory.getCurrentSession();
 		Transaction txn = s.getTransaction();
 		ArrayList<Integer> result = new ArrayList<Integer>();
@@ -24,7 +24,7 @@ public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServi
 			if(!txn.isActive()) {
 				txn.begin();
 			}
-			for(T t1:obj)
+			for(T t1:list)
 			{
 					result.add((int)s.save(t1));
 			}
@@ -77,7 +77,7 @@ public class CommonDBServicesImp <T extends BaseEntity> implements CommonDBServi
 	}
 
 	@Override
-	public void objectToDB(ArrayList<T> obj, String action) {
+	public void objectToDB(List<T> obj, String action) {
 		Session s = sessionFactory.getCurrentSession();
 		Transaction txn = s.getTransaction();
 		try {
