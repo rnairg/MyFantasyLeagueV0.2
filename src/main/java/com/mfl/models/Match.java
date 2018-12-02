@@ -118,6 +118,10 @@ public class Match extends BaseEntity {
 		
 		@XmlElement(name="match")
 		private List<Match> matches= new ArrayList<>();
+		
+		public Matches() {
+			
+		}
 
 		public Matches(ArrayList<Match> matches) {
 			this.matches=matches;

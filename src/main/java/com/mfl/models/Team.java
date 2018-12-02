@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.CollectionId;
+//import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -27,7 +28,10 @@ import org.springframework.stereotype.Component;
 @Table (name="TEAM_MASTER")
 @NamedQueries(
 {@NamedQuery(name="get_team_byID", query="from team t where t.id=:id"),
-@NamedQuery(name="get_all_teams", query="select new com.mfl.models.Team(t.id, t.name, t.owner) from team t")})
+@NamedQuery(name="get_all_teams", query="select new com.mfl.models.Team(t.id, t.name, t.owner, coalesce(sum(ps.points),0) as points)  from team t"
+		+ " join t.players as p"
+		+ " left join playerStat ps on p.id = ps.player.id"
+		+ " group by t.id order by points desc")})
 
 public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 
@@ -47,14 +51,14 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 	@CollectionId(columns= {@Column(name="TEAM_COMP_ID")},generator="increment-gen",type=@Type(type="long"))
 	private Collection<Player> players = new ArrayList<Player>();
 	
-	//@Formula(value = "sum(playerStat.points)")
+	//@Formula(value = "sum(ps.points)")
 	@Transient
-	private int points;
+	private long points;
 				
-	public int getPoints() {
+	public long getPoints() {
 		return points;
 	}
-	public void setPoints(int points) {
+	public void setPoints(long points) {
 		this.points = points;
 	}
 	public Collection<Player> getPlayers() {
@@ -94,12 +98,13 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 		this.name=name;
 		this.owner=owner;
 	}
-	public Team(int id, String name, String owner, int points) {
+	public Team(int id, String name, String owner, long points) {
 		this.id=id;
 		this.name=name;
 		this.owner=owner;
 		this.points=points;
 	}
+
 	public Team() {
 		
 	}
@@ -110,6 +115,10 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 		
 		@XmlElement(name = "team")
 		private List<Team> teams = new ArrayList<Team>();
+		
+		public Teams() {
+			
+		}
 		
 		public Teams(ArrayList<Team> teams) {
 			this.teams=teams;

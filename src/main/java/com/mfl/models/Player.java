@@ -103,6 +103,10 @@ public class Player extends BaseEntity { //Model for Table PLAYER_MASTER
 		this.id=id;
 		this.name=name;
 	}
+	public Player(int id)
+	{
+		this.id=id;
+	}
 	public Player() {
 		super();
 	}

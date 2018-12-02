@@ -78,12 +78,18 @@ public class IplTeam extends BaseEntity {
 		this.id=id;
 		this.name=name;
 	}
+	public IplTeam(int id) {
+		this.id=id;
+	}
 	@XmlRootElement(name = "iplTeams") //Model Class for Teams XML
 	@Component
 	public static class IplTeams{
 		
 		@XmlElement(name = "iplTeam")
 		private List<IplTeam> iplTeams = new ArrayList<IplTeam>();
+		
+		public IplTeams() {
+		}
 		
 		public IplTeams(ArrayList<IplTeam> iplTeams) {
 			this.iplTeams=iplTeams;
