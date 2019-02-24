@@ -6,16 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mfl.dao.CommonDBServicesImp;
 import com.mfl.models.PlayerStat;
+import com.mfl.models.Player;
+import com.mfl.models.Player.Players;
 import com.mfl.models.PlayerStat.PlayerStats;
 import com.mfl.modules.Modules;
+import com.mfl.utils.Points;
 @Service
 public class PlayerStatModule implements Modules<PlayerStats> {
 	
-	private final int RUNS_FACTOR=1;
-	private final int CATCHES_FACTOR=10;
-	private final int WICKETS_FACTOR=25;
 	@Autowired
 	private CommonDBServicesImp<PlayerStat> psds;
+	/*@Autowired
+	private TeamStatModule tsm;*/
+	@Autowired
+	private Modules<Players> playerModule;
 	
 	@Override
 	public PlayerStats read() {
@@ -27,6 +31,7 @@ public class PlayerStatModule implements Modules<PlayerStats> {
 	}
 	@Override
 	public ArrayList<Integer> create(PlayerStats playerStats) {
+		//return tsm.create(enrichPlayerStats(playerStats).getPlayerStats());
 		return psds.objectToDB(enrichPlayerStats(playerStats).getPlayerStats());
 	}
 	@Override
@@ -37,14 +42,10 @@ public class PlayerStatModule implements Modules<PlayerStats> {
 	public void update(PlayerStats playerStats) {
 		psds.objectToDB(enrichPlayerStats(playerStats).getPlayerStats(),"update");
 	}
-	
-	private int calculatePoints(int wickets, int catches, int runs) {
-		int points = (wickets*WICKETS_FACTOR)+(catches*CATCHES_FACTOR)+(runs*RUNS_FACTOR);
-		return points;
-	}
 	private PlayerStats enrichPlayerStats(PlayerStats playerStats) {
 		for(PlayerStat ps:playerStats.getPlayerStats()) {
-			ps.setPoints(calculatePoints(ps.getWickets(),ps.getCatches(),ps.getRuns()));
+			Player p = playerModule.read(ps.getPlayer().getId()).getPlayers().get(0);
+			ps.setPoints(Points.calculatePoints(ps,p));
 		}
 		return playerStats;
 	}

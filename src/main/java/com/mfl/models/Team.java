@@ -104,6 +104,9 @@ public class Team extends BaseEntity { //Model for Table TEAM_MASTER
 		this.owner=owner;
 		this.points=points;
 	}
+	public Team(int id) {
+		this.id=id;
+	}
 
 	public Team() {
 		

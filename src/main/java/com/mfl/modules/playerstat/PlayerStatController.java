@@ -17,6 +17,7 @@ public class PlayerStatController {
 	
 	@Autowired
 	private Modules<PlayerStats> playerStatModule;
+	
 
 	@RequestMapping("/playerStats")
 	public PlayerStats getPlayerStats()
