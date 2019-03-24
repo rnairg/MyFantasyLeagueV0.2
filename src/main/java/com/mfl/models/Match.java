@@ -1,10 +1,15 @@
 package com.mfl.models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -44,6 +49,21 @@ public class Match extends BaseEntity {
 	private int wicketOne;
 	@Column (name="WICKET_TWO")
 	private int wicketTwo;
+	@Column (name="MATCH_DATE")
+	@Temporal(TemporalType.DATE)
+	private Date matchDate;
+	
+	public Date getMatchDate() {
+		return matchDate;
+	}
+	public void setMatchDate(String matchDate) {
+		try {
+			this.matchDate = new SimpleDateFormat("dd/MM/yyyy").parse(matchDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	/*@OneToMany
 	@JoinColumn (name="PLAYER_STATS_ID")
 	private Collection<PlayerStats> playerStats;*/
